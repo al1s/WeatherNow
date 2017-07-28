@@ -1,0 +1,461 @@
+<!doctype html>
+<html>
+<!-- TODO: store temp scale choice in a cookie -->
+<head>
+  <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet"> 
+  <title>Your local weather</title>
+  <style>
+
+root {
+  --text-color: #fff;
+  --bg-color: #fff;
+}
+
+.main {
+  border-radius: 5px;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  display: inline-block;
+  margin-left: 10vw;
+  margin-top: 15vh;
+  opacity: 0.8;
+  padding: 1rem;
+  position: relative;
+  text-transform: uppercase;
+  }
+
+.about {
+  background-color: var(--bg-color);
+  border: 2px solid var(--text-color);
+  color: var(--text-color);
+  display: block;
+  padding: 1rem;
+  padding-top: 1.5rem;
+  position: relative;
+}
+
+.modal {
+  left: 0;
+  margin-top: 15%;
+  margin-left: 10%;
+  margin-right: 10%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 10;  
+}
+
+.about__button {
+  border: 1px solid var(--text-color);
+  background-color: var(--bg-color);
+  border-radius: 50%;
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 0.6rem;
+  height: 10%;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 10%;
+  padding-left: 6px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+}
+
+.about__button--close-modal {
+  border: 1px solid var(--bg-color);
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  cursor: pointer;
+  font-size: 0.7rem;
+  height: 20px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 21px;
+  padding-left: -0.7rem;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+}
+
+.closed {
+  display: none;
+}
+
+.geo-details {
+  margin-bottom: 1.5rem;
+}
+
+.geo-details__date {
+  margin-bottom: 0.6rem;
+}
+
+.weather__temp {
+  display: inline;
+  position: relative;
+  padding-right: 1.3rem;
+
+}
+
+.weather__temp::after {
+  border: 2px solid var(--text-color);
+  border-radius: 50%;
+  content: '';
+  height: 0.5rem;
+  position: absolute;
+  right: 10px;
+  top: 2.3px;
+  width: 0.5rem;
+
+}
+
+.weather__temp--scale-f,
+.weather__temp--scale-c {
+  color: inherit;
+  cursor: pointer;
+  background-color: inherit;
+  border: none;
+  font-size: inherit;
+  font-family: inherit;
+  margin: 0;
+  opacity: 0.4;
+  padding: 0;
+}
+
+.copyright {
+  background-color: var(--bg-color);
+  border-radius: 5px;
+  bottom: 10px;
+  position: fixed;
+  right: 10px;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.copyright__text {
+  color: var(--text-color);
+  display: inline-block;
+  font-size: 1rem;
+  padding-right: 0.3rem;
+}
+
+.copyright__text a {
+  color: inherit;
+}
+
+.copyright__sign {
+  fill: var(--text-color);
+  height: 25px;
+  vertical-align: middle;
+  width: 30px;
+}
+
+
+.vivid {
+  opacity: inherit;
+}
+
+.vague {
+  opacity: 0.4;
+}
+
+.font--bigger {
+  font-size: 2rem;
+}
+
+/* css reset */
+div, p, span {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  height: 100vh;
+  font-family: "Exo 2", "Lato", "PT Sans", -apple-system, BlinkMacSystemFont, "Roboto", "Ubuntu", "Droid Sans", "Helvetica Neue", "Arial", sans-serif;
+  font-size: 1rem;
+  /*background-image: url(sunny/sunny.jpg);*/
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+* {
+//  border:1px solid red;
+
+}
+  </style>
+</head>
+<body>
+  <div class="main">
+    <button class="about__button">i</button>
+    <div class="geo-details">
+      <p class="geo-details__time"></p>
+      <p class="geo-details__date"></p>
+      <p class="geo-details__place"></p>
+    </div>
+    <div class="weather">
+      <span class="weather__sky"></span>
+      <div class="weather__temp  font--bigger"></div><button class="weather__temp--scale-f  vivid  font--bigger" tabindex="0" role="button">F</button><span class="vague  font--bigger">/</span><button class="weather__temp--scale-c  font--bigger" tabindex="0" role="button">C</button>
+    </div>
+  </div>
+  <div class="about  modal  closed">
+    <button class="about__button--close-modal">X</button>
+    <p>It's an approach to a "Local weather app" from <a href="https://www.freecodecamp.org/challenges/show-the-local-weather">FreeCodeCamp</a> cirriculum.</p>
+    <p>User story:</p>
+    <ul>
+      <li>I can see the weather in my current location.</li>
+      <li>I can see a different icon or background image (e.g. snowy mountain, hot desert) depending on the weather.</li>
+      <li>I can push a button to toggle between Fahrenheit and Celsius.</li>
+    </ul>
+  </div>
+  <div class="copyright">
+  <svg class="copyright__sign">
+    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="by.svg#CC_by_sign"></use>
+  </svg>
+  <p class="copyright__text"></p>
+  </div>
+
+</body>
+<script>
+
+  function capitalize(sentence) {
+    return sentence[0].toUpperCase() + sentence.substr(1);
+  }
+
+  function errorHandler(error) {
+    console.log(`Error while retrieving geolocation - ${error.message}`);
+  }
+
+  function getWeatherColor(temp_c) {
+    let colors = {};
+    if (30 <= temp_c) colors = { main: '#A50021', support: '#fff'};
+    else if (25 <= temp_c && temp_c < 30) colors = { main: '#D82632', support: '#fff'};
+    else if (20 <= temp_c && temp_c < 25) colors = { main: '#F76D5E', support: '#fff'};
+    else if (15 <= temp_c && temp_c < 20) colors = { main: '#FFAD72', support: '#00528D'};
+    else if (10 <= temp_c && temp_c < 15) colors = { main: '#FFE099', support: '#001F66'};
+    else if (5 <= temp_c && temp_c < 10) colors = { main: '#FFFFBF', support: '#000040'};
+    else if (0 <= temp_c && temp_c < 5) colors = { main: '#E0FFFF', support: '#1F0000'};
+    else if (-5 <= temp_c && temp_c < 0) colors = { main: '#AAF7FF', support: '#1F0000'};
+    else if (-10 <= temp_c && temp_c < -5) colors = { main: '#72D8FF', support: '#1F0000'};
+    else if (-15 <= temp_c && temp_c < -10) colors = { main: '#3FA0FF', support: '#1F0000'};
+    else if (-20 <= temp_c && temp_c < -15) colors = { main: '#264CFF', support: '#00528D'};
+    return colors;
+  }
+
+  function getWeatherImage(conditions) {
+    let backgroundImage;
+    let credit = {};
+    let credits = {
+      flurries:    { author: 'Frida',
+                       link: 'https://flic.kr/p/k7zUGc' },
+      snow:        { author: 'FHKE',
+                       link: 'https://flic.kr/p/7AVLQR'},
+      storm:       { author: 'Kuster & Wildhaber Photography',
+                       link: 'https://flic.kr/p/cESNRS'},
+      sunny:       { author: 'Chris',
+                       link: 'https://flic.kr/p/fgLTUU'},
+      cloudy:      { author: 'Kay Gaensler',
+                       link: 'https://flic.kr/p/cScQxy'},
+      fog:         { author: 'Martin Fisch',
+                       link: 'https://flic.kr/p/dkqP1t'},
+      partlysunny: { author: 'Nicolas Raymond',
+                       link: 'http://freestock.ca/skies_clouds_g61-coastal_clouds__hdr_p1879.html'},
+      mostlysunny: { author: 'Nicolas Raymond',
+                       link: 'http://freestock.ca/canada_g92-beaver_brook_scenery__hdr_p804.html'},
+      rain:        { author: 'Gabriele Diwald',
+                       link: 'https://flic.kr/p/dfkuTL'},
+    };
+    switch (conditions) {
+      case 'chanceflurries':
+      case 'chancesleet':
+      case 'flurries':
+      case 'sleet':
+        backgroundImage = 'flurries/flurries.jpg'
+        credit = credits.flurries;
+        break;
+      case 'chancesnow':
+      case 'snow':
+        backgroundImage = 'snow/snow.jpg'
+        credit = credits.snow;
+        break;
+      case 'chancetstorms':
+      case 'tstorms':
+        backgroundImage = 'storm/storm.jpg'
+        credit = credits.storm;
+        break;
+      case 'clear':
+      case 'sunny':
+        backgroundImage = 'sunny/sunny.jpg'
+        credit = credits.sunny;
+        break;
+      case 'cloudy':
+        backgroundImage = 'cloudy/cloudy.jpg'
+        credit = credits.cloudy;
+        break;
+      case 'fog':
+      case 'hazy':
+        backgroundImage = 'fog/fog.jpg'
+        credit = credits.fog;
+        break;
+      case 'mostlycloudy':
+      case 'partlysunny':
+        backgroundImage = 'partlysunny/partlysunny.jpg'
+        credit = credits.partlysunny;
+        break;
+      case 'mostlysunny':
+      case 'partlycloudy':
+        backgroundImage = 'mostlysunny/mostlysunny.jpg'
+        credit = credits.mostlysunny;
+        break;
+      case 'chancerain':
+      case 'rain':
+        backgroundImage = 'rain/rain.jpg'
+        credit = credits.rain;
+        break;
+    }
+    return { image: backgroundImage, credit };
+  }
+
+  function displayData(data) {
+
+    const bodyElm = document.querySelector('body');
+    const mainElm = document.querySelector('.main');
+    const dateElm = document.querySelector('.geo-details__date');
+    const timeElm = document.querySelector('.geo-details__time');
+    const placeElm = document.querySelector('.geo-details__place');
+    const skyElm = document.querySelector('.weather__sky');
+    const tempElm = document.querySelector('.weather__temp');
+    const tempFScaleElm = document.querySelector('.weather__temp--scale-f');
+    const tempCScaleElm = document.querySelector('.weather__temp--scale-c');
+    const copyrightTextElm = document.querySelector('.copyright__text');
+
+    dateElm.innerText = data.currDate;
+    timeElm.innerText = data.currTime;
+    placeElm.innerText = data.place;
+    //skyElm.innerText = data.sky;
+    tempElm.innerText = data.temp_f;
+    const bgImage = getWeatherImage(data.conditions);
+    const weatherColors = getWeatherColor(data.temp_c);
+    document.documentElement.style.setProperty('--bg-color', weatherColors.main);
+    document.documentElement.style.setProperty('--text-color', weatherColors.support);
+
+    bodyElm.style.backgroundImage = `url('${bgImage.image}')`;
+    copyrightTextElm.innerHTML = `<p>Image by <a href='${bgImage.credit.link}'>${bgImage.credit.author}</a></p>`;
+
+    tempCScaleElm.addEventListener('click', cScaleClickHandler);
+    tempCScaleElm.addEventListener('keypress', cScaleClickHandler);
+
+    function cScaleClickHandler(e) {
+      if ((e.type === 'keypress' && (e.code == 13 || e.code == 32)) ||
+           e.type === 'click') {
+        tempFScaleElm.classList.toggle('vivid');
+        tempCScaleElm.classList.toggle('vivid');
+        tempElm.innerText = data.temp_c;
+        tempCScaleElm.removeEventListener('click', cScaleClickHandler);
+        tempCScaleElm.removeEventListener('keypress', cScaleClickHandler);
+        tempFScaleElm.addEventListener('click', fScaleClickHandler);
+        tempFScaleElm.addEventListener('keypress', fScaleClickHandler);
+      }
+    };
+
+    function fScaleClickHandler(e) {
+      if ((e.type === 'keypress' && (e.code == 13 || e.code == 32)) ||
+           e.type === 'click') {
+        tempFScaleElm.classList.toggle('vivid');
+        tempCScaleElm.classList.toggle('vivid');
+        tempElm.innerText = data.temp_f;
+        tempFScaleElm.removeEventListener('click', fScaleClickHandler);
+        tempFScaleElm.removeEventListener('keypress', fScaleClickHandler);
+        tempCScaleElm.addEventListener('click', cScaleClickHandler);
+        tempCScaleElm.addEventListener('keypress', cScaleClickHandler);
+      }
+    };
+
+  }
+
+
+  function getWeatherForPosition(pos) {
+    const httpAddr = `http://api.wunderground.com/api/c29706cb930a70b9/conditions/q/${pos.coords.latitude},${pos.coords.longitude}.json`;//Kenmore,WA    
+
+    fetch(httpAddr)
+      .then(resp => {
+        if (resp.ok) {
+          return resp.json();
+        }
+        throw new Error();
+      })
+      .then(data => {
+        const obz = data.current_observation;
+        const loc = obz.display_location;
+
+        const place = loc.city + ', ' + (loc.country === 'US' ? loc.state : loc.state_name) +  (loc.country === 'US' ? (', ' + loc.country) : '');
+        const time = obz.local_epoch;
+        let d = new Date(0);
+        d.setUTCSeconds(time);
+        const dayOptions = { weekday: 'long' };
+        const dateOptions = { month: 'long',
+                              day: 'numeric' };
+        const timeOptions = { hour: 'numeric',
+                              minute: 'numeric' };
+        const currDay = d.toLocaleDateString(undefined, dayOptions);
+        const currDate = d.toLocaleDateString(undefined, dateOptions);
+        const currTime = d.toLocaleTimeString(undefined, timeOptions);
+        const sky = obz.weather;
+        const temp = obz.temperature_string;
+        const temp_c = obz.temp_c;
+        const temp_f = obz.temp_f;
+        const tempFeels = obz.feelslike_string;
+        const tempFeelsC = obz.feelslike_c;
+        const tempFeelsF = obz.feelslike_f;
+        const conditions = obz.icon;
+        return {
+          place,
+          currDay,
+          currDate,
+          currTime,
+          sky,
+          temp,
+          temp_f,
+          temp_c,
+          tempFeels,
+          tempFeelsF,
+          tempFeelsC,
+          conditions
+        }
+      })
+      .then(data => displayData(data))
+      .catch (error => console.log(`Error while retrieving weather data - ${error.msg}`));
+  }
+
+
+
+  if(navigator) {
+    navigator.geolocation.getCurrentPosition(getWeatherForPosition, errorHandler);
+  }
+
+  const aboutBtn = document.querySelector('.about__button');
+  aboutBtn.addEventListener('click', function() {
+    const aboutMsg = document.querySelector('.about');
+    aboutMsg.classList.toggle('closed');
+  });
+
+  const aboutCloseBtn = document.querySelector('.about__button--close-modal');
+  aboutCloseBtn.addEventListener('click', function() {
+    const aboutMsg = document.querySelector('.about');
+    aboutMsg.classList.toggle('closed');
+  });
+
+
+
+</script>
+</html>
