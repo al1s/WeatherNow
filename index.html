@@ -385,7 +385,7 @@ body {
 
 
   function getWeatherForPosition(pos) {
-    const httpAddr = `http://api.wunderground.com/api/c29706cb930a70b9/conditions/q/${pos.coords.latitude},${pos.coords.longitude}.json`;//Kenmore,WA    
+    const httpAddr = `https://api.wunderground.com/api/c29706cb930a70b9/conditions/q/${pos.coords.latitude},${pos.coords.longitude}.json`;//Kenmore,WA    
 
     fetch(httpAddr)
       .then(resp => {
