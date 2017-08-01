@@ -1,9 +1,10 @@
 <!doctype html>
-<html>
+<html lang="en">
 <!-- TODO: store temp scale choice in a cookie -->
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="utf-8">
-  <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
   <title>Your local weather</title>
   <style>
 
@@ -25,9 +26,18 @@ root {
   text-transform: uppercase;
   }
 
+.header {
+  visibility: hidden;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  width: 0;
+}
+
 .about {
   background-color: var(--bg-color);
   border: 2px solid var(--text-color);
+  border-radius: 5px;
   color: var(--text-color);
   display: block;
   padding: 1rem;
@@ -43,7 +53,7 @@ root {
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 10;  
+  z-index: 10;
 }
 
 .about__button {
@@ -67,6 +77,7 @@ root {
 .about__button--close-modal {
   border: 1px solid var(--bg-color);
   background-color: var(--text-color);
+  border-radius: 5px;
   color: var(--bg-color);
   cursor: pointer;
   font-size: 0.7rem;
@@ -112,8 +123,21 @@ root {
 
 }
 
-.weather__temp--scale-f,
-.weather__temp--scale-c {
+.radio__list {
+  border: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+.radio__item {
+  position: absolute;
+  left: -999px;
+  overflow: hidden;
+}
+
+
+.label__item {
   color: inherit;
   cursor: pointer;
   background-color: inherit;
@@ -131,7 +155,6 @@ root {
   bottom: 10px;
   position: fixed;
   right: 10px;
-  color: var(--text-color);
   text-decoration: none;
 }
 
@@ -147,12 +170,13 @@ root {
 }
 
 .copyright__sign {
-  fill: var(--bg-color);
   height: 25px;
   vertical-align: middle;
   width: 30px;
+  color: #fff;
+  /*color: var(--bg-color);
+  fill: var(--text-color);*/
 }
-
 
 .vivid {
   opacity: inherit;
@@ -196,8 +220,25 @@ body {
   </style>
 </head>
 <body>
-  <div class="main">
-    <button class="about__button">i</button>
+
+  <svg style="display:none;" version="1.0" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="CC_by_sign"  viewbox="5.5 -3.5 64 64">
+      <circle fill="currentColor" cx="37.637" cy="28.806" r="28.276"/>
+      <path d="M37.443-3.5c8.988,0,16.57,3.085,22.742,9.257C66.393,11.967,69.5,19.548,69.5,28.5c0,8.991-3.049,16.476-9.145,22.456
+          C53.879,57.319,46.242,60.5,37.443,60.5c-8.649,0-16.153-3.144-22.514-9.43C8.644,44.784,5.5,37.262,5.5,28.5
+          c0-8.761,3.144-16.342,9.429-22.742C21.101-0.415,28.604-3.5,37.443-3.5z M37.557,2.272c-7.276,0-13.428,2.553-18.457,7.657
+          c-5.22,5.334-7.829,11.525-7.829,18.572c0,7.086,2.59,13.22,7.77,18.398c5.181,5.182,11.352,7.771,18.514,7.771
+          c7.123,0,13.334-2.607,18.629-7.828c5.029-4.838,7.543-10.952,7.543-18.343c0-7.276-2.553-13.465-7.656-18.571
+          C50.967,4.824,44.795,2.272,37.557,2.272z M46.129,20.557v13.085h-3.656v15.542h-9.944V33.643h-3.656V20.557
+          c0-0.572,0.2-1.057,0.599-1.457c0.401-0.399,0.887-0.6,1.457-0.6h13.144c0.533,0,1.01,0.2,1.428,0.6
+          C45.918,19.5,46.129,19.986,46.129,20.557z M33.042,12.329c0-3.008,1.485-4.514,4.458-4.514s4.457,1.504,4.457,4.514
+          c0,2.971-1.486,4.457-4.457,4.457S33.042,15.3,33.042,12.329z"/>
+  </symbol>
+  </svg>
+
+  <main class="main">
+    <h1 class='header'>Your local weather conditions.</h1>
+    <button class="about__button" aria-label="Information about this page">i</button>
     <div class="geo-details">
       <p class="geo-details__time"></p>
       <p class="geo-details__date"></p>
@@ -205,11 +246,21 @@ body {
     </div>
     <div class="weather">
       <span class="weather__sky"></span>
-      <div class="weather__temp  font--bigger"></div><button class="weather__temp--scale-f  vivid  font--bigger" tabindex="0" role="button">F</button><span class="vague  font--bigger">/</span><button class="weather__temp--scale-c  font--bigger" tabindex="0" role="button">C</button>
+      <div class="weather__temp  font--bigger"></div><!--
+      <button class="weather__temp--scale-f  vivid  font--bigger" tabindex="0" aria-label="Set scale to Fahrenheit" aria-pressed="true">F</button><!--
+      <span class="vague  font--bigger">/</span><!--
+      <button class="weather__temp--scale-c  font--bigger" tabindex="0" aria-label="Set scale to Celsius">C</button>-->
+      <fieldset class="radio__list">
+        <input class="radio__item  radio__item--fahrenheit" type="radio" id="scaleFahrenheit" name="scaleSwitch" tabindex="-1" aria-checked="true" aria-label="Set scale to Fahrenheit"/>
+        <label class="label__item  label__item--fahrenheit  vivid  font--bigger" for="scaleFahrenheit" tabindex="0" aria-labelledby="scaleFahrenheit">F</label>
+        <span class="vague  font--bigger">/</span>
+        <input class="radio__item radio__item--celsius" type="radio" id="scaleCelsius" name="scaleSwitch" tabindex="-1" aria-checked="false" aria-label="Set scale to Celsius"/>
+        <label class="label__item  label__item--celsius  font--bigger" for="scaleCelsius" tabindex="0" aria-labelledby="scaleCelsius">C</label>
+      </fieldset>
     </div>
-  </div>
+  </main>
   <div class="about  modal  closed">
-    <button class="about__button--close-modal">X</button>
+    <button class="about__button--close-modal" aria-label="Close">X</button>
     <p>It's an approach to a "Local weather app" from <a href="https://www.freecodecamp.org/challenges/show-the-local-weather">FreeCodeCamp</a> cirriculum.</p>
     <p>User story:</p>
     <ul>
@@ -220,107 +271,162 @@ body {
   </div>
   <div class="copyright">
   <svg class="copyright__sign">
-    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="by.svg#CC_by_sign"></use>
+    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#CC_by_sign"></use>
   </svg>
   <p class="copyright__text"></p>
   </div>
 
 </body>
+
+<!--<script src="fetch.js"></script>-->
 <script>
+
+  function createCookie(name,value,days) {
+	if (days) {
+      var date = new Date();
+      date.setTime(date.getTime()+(days*24*60*60*1000));
+      var expires = "; expires="+date.toGMTString();
+	}
+	else {
+	  var expires = "";
+	}
+	document.cookie = name+"="+value+expires+"; path=/";
+  }
+
+  function readCookie(name) {
+    const nameEQ = name + "=";
+    const re = new RegExp(`.*${nameEQ}(\\w+).*`,'g');
+    const result = re.exec(document.cookie);
+    return result ? result[1] : undefined;
+  }
+
+  function eraseCookie(name) {
+    createCookie(name,"",-1);
+  }
+
 
   function capitalize(sentence) {
     return sentence[0].toUpperCase() + sentence.substr(1);
   }
 
   function errorHandler(error) {
-    console.log(`Error while retrieving geolocation - ${error.message}`);
+    console.log(`Got error  - ${error.message},\n${err.stack}`);
+  }
+
+  function geoLocFail() {
+    alert('Geolocation error'); // it's alert because we need to catch it on mobile platforms
   }
 
   function getWeatherColor(temp_c) {
     let colors = {};
     if (30 <= temp_c) colors = { main: '#A50021', support: '#fff'};
     else if (25 <= temp_c && temp_c < 30) colors = { main: '#D82632', support: '#fff'};
-    else if (20 <= temp_c && temp_c < 25) colors = { main: '#F76D5E', support: '#fff'};
-    else if (15 <= temp_c && temp_c < 20) colors = { main: '#FFAD72', support: '#00528D'};
+    else if (20 <= temp_c && temp_c < 25) colors = { main: '#F76D5E', support: '#242442'}; //support: #fff - bad accessibility
+    else if (15 <= temp_c && temp_c < 20) colors = { main: '#FFAD72', support: '#00365c'};
     else if (10 <= temp_c && temp_c < 15) colors = { main: '#FFE099', support: '#001F66'};
     else if (5 <= temp_c && temp_c < 10) colors = { main: '#FFFFBF', support: '#000040'};
     else if (0 <= temp_c && temp_c < 5) colors = { main: '#E0FFFF', support: '#1F0000'};
     else if (-5 <= temp_c && temp_c < 0) colors = { main: '#AAF7FF', support: '#1F0000'};
     else if (-10 <= temp_c && temp_c < -5) colors = { main: '#72D8FF', support: '#1F0000'};
     else if (-15 <= temp_c && temp_c < -10) colors = { main: '#3FA0FF', support: '#1F0000'};
-    else if (-20 <= temp_c && temp_c < -15) colors = { main: '#264CFF', support: '#00528D'};
+    else if (-20 <= temp_c && temp_c < -15) colors = { main: '#264CFF', support: '#fcc'};
     return colors;
   }
 
-  function getWeatherImage(conditions) {
+  function getWeatherImage(conditions, seasonYear) {
+    // weather determitants:
+    // - conditions as returned by weather API
+    // - current local season of the year;
+    // - latitude (north or south hemisphere);
+    // - current local time; ???
     let backgroundImage;
     let credit = {};
     let credits = {
       flurries:    { author: 'Frida',
                        link: 'https://flic.kr/p/k7zUGc' },
       snow:        { author: 'FHKE',
-                       link: 'https://flic.kr/p/7AVLQR'},
+                       link: 'https://flic.kr/p/7AVLQR' },
       storm:       { author: 'Kuster & Wildhaber Photography',
-                       link: 'https://flic.kr/p/cESNRS'},
-      sunny:       { author: 'Chris',
-                       link: 'https://flic.kr/p/fgLTUU'},
-      cloudy:      { author: 'Kay Gaensler',
-                       link: 'https://flic.kr/p/cScQxy'},
+                       link: 'https://flic.kr/p/cESNRS' },
       fog:         { author: 'Martin Fisch',
-                       link: 'https://flic.kr/p/dkqP1t'},
-      partlysunny: { author: 'Nicolas Raymond',
-                       link: 'http://freestock.ca/skies_clouds_g61-coastal_clouds__hdr_p1879.html'},
-      mostlysunny: { author: 'Nicolas Raymond',
-                       link: 'http://freestock.ca/canada_g92-beaver_brook_scenery__hdr_p804.html'},
+                       link: 'https://flic.kr/p/dkqP1t' },
       rain:        { author: 'Gabriele Diwald',
-                       link: 'https://flic.kr/p/dfkuTL'},
+                       link: 'https://flic.kr/p/dfkuTL' },
+      sunny:       { winter: { author: 'bfatphoto',
+                                 link: 'https://flic.kr/p/RHwJiG' },
+                    spring:  { author: 'Stanley Zimny',
+                                 link: 'https://flic.kr/p/oavqBk' },
+                    summer:  { author: 'Chris',
+                                 link: 'https://flic.kr/p/fgLTUU' },
+                    fall:    { author: 'Jorge Franganillo',
+                                 link: 'https://flic.kr/p/i28UqP' }},
+      cloudy:      { summer: { author: 'Kay Gaensler',
+                                 link: 'https://flic.kr/p/cScQxy' },
+                     winter: { author: 'Peter Toporowski',
+                                 link: 'https://flic.kr/p/RDW4Z1' }},
+      partlysunny: { winter: { author: 'Gérald Laik',
+                                 link: 'https://flic.kr/p/RzuZS7' },
+                    spring:  { author: 'Graham Haley',
+                                 link: 'https://flic.kr/p/UtjTDm' },
+                    summer:  { author: 'Nicolas Raymond',
+                                 link: 'http://freestock.ca/skies_clouds_g61-coastal_clouds__hdr_p1879.html' }},
+     mostlysunny:  { winter: { author: 'Adam Tas',
+                                 link: 'https://flic.kr/p/R33zcf' },
+                    spring:  { author: 'Jim Choate',
+                                 link: 'https://flic.kr/p/SbmJj2' },
+                    summer:  { author: 'Nicolas Raymond',
+                                 link: 'http://freestock.ca/canada_g92-beaver_brook_scenery__hdr_p804.html' },
+                    fall:    { author: 'Belinda Church',
+                                 link: 'https://flic.kr/p/qb4cbs' }}
     };
     switch (conditions) {
       case 'chanceflurries':
       case 'chancesleet':
       case 'flurries':
       case 'sleet':
-        backgroundImage = 'flurries/flurries.jpg'
+        backgroundImage = `flurries/flurries.jpg`;
         credit = credits.flurries;
         break;
       case 'chancesnow':
       case 'snow':
-        backgroundImage = 'snow/snow.jpg'
+        backgroundImage = `snow/snow.jpg`;
         credit = credits.snow;
         break;
       case 'chancetstorms':
       case 'tstorms':
-        backgroundImage = 'storm/storm.jpg'
+        backgroundImage = `storm/storm.jpg`;
         credit = credits.storm;
-        break;
-      case 'clear':
-      case 'sunny':
-        backgroundImage = 'sunny/sunny.jpg'
-        credit = credits.sunny;
-        break;
-      case 'cloudy':
-        backgroundImage = 'cloudy/cloudy.jpg'
-        credit = credits.cloudy;
         break;
       case 'fog':
       case 'hazy':
-        backgroundImage = 'fog/fog.jpg'
+        backgroundImage = `fog/fog.jpg`;
         credit = credits.fog;
-        break;
-      case 'mostlycloudy':
-      case 'partlysunny':
-        backgroundImage = 'partlysunny/partlysunny.jpg'
-        credit = credits.partlysunny;
-        break;
-      case 'mostlysunny':
-      case 'partlycloudy':
-        backgroundImage = 'mostlysunny/mostlysunny.jpg'
-        credit = credits.mostlysunny;
         break;
       case 'chancerain':
       case 'rain':
-        backgroundImage = 'rain/rain.jpg'
+        backgroundImage = `rain/rain.jpg`;
         credit = credits.rain;
+        break;
+      case 'clear':
+      case 'sunny':
+        backgroundImage = `sunny/${seasonYear}/sunny_${seasonYear}.jpg`;
+        credit = credits.sunny[seasonYear];
+        break;
+      case 'cloudy':
+        if (seasonYear === 'spring' || seasonYear === 'fall') seasonYear = 'summer';
+        backgroundImage = `cloudy/${seasonYear}/cloudy_${seasonYear}.jpg`;
+        credit = credits.cloudy[seasonYear];
+        break;
+      case 'mostlycloudy':
+      case 'partlysunny':
+        if (seasonYear === 'fall') seasonYear = 'spring';
+        backgroundImage = `partlysunny/${seasonYear}/partlysunny_${seasonYear}.jpg`;
+        credit = credits.partlysunny[seasonYear];
+        break;
+      case 'mostlysunny':
+      case 'partlycloudy':
+        backgroundImage = `mostlysunny/${seasonYear}/mostlysunny_${seasonYear}.jpg`;
+        credit = credits.mostlysunny[seasonYear];
         break;
     }
     return { image: backgroundImage, credit };
@@ -335,57 +441,91 @@ body {
     const placeElm = document.querySelector('.geo-details__place');
     const skyElm = document.querySelector('.weather__sky');
     const tempElm = document.querySelector('.weather__temp');
-    const tempFScaleElm = document.querySelector('.weather__temp--scale-f');
-    const tempCScaleElm = document.querySelector('.weather__temp--scale-c');
+    const tempFScaleLabelElm = document.querySelector('.label__item--fahrenheit');
+    const tempCScaleLabelElm = document.querySelector('.label__item--celsius');
+    const tempFScaleInputElm = document.querySelector('.radio__item--fahrenheit');
+    const tempCScaleInputElm = document.querySelector('.radio__item--celsius');
     const copyrightTextElm = document.querySelector('.copyright__text');
+    const copyrightSignElm = document.querySelector('.copyright__sign');
+    const userScale = readCookie('scale');
+
 
     dateElm.innerText = data.currDate;
     timeElm.innerText = data.currTime;
     placeElm.innerText = data.place;
-    //skyElm.innerText = data.sky;
-    tempElm.innerText = data.temp_f;
-    const bgImage = getWeatherImage(data.conditions);
-    const weatherColors = getWeatherColor(data.temp_c);
+    tempElm.innerText = userScale === 'celsius' ? data.temp_c : data.temp_f;
+
+    // set visual appearance of the page
+    let seasonYear;
+    if (data.currMonth < 3 || data.currMonth === 12) seasonYear = data.hemisphere === 'north' ? 'winter' : 'summer';
+    else if (3 <= data.currMonth && data.currMonth < 6) seasonYear = data.hemisphere === 'north' ? 'spring' : 'fall';
+    else if (6 <= data.currMonth && data.currMonth < 9) seasonYear = data.hemisphere === 'north' ? 'summer' : 'winter';
+    else if (9 <= data.currMonth && data.currMonth < 12) seasonYear = data.hemisphere === 'north' ? 'fall' : 'spring';
+    const bgImage = getWeatherImage(data.conditions, seasonYear);
+    const weatherColors = getWeatherColor(data.temp_c); // all inner visual appearance decisions are based on celsius scale;
     document.documentElement.style.setProperty('--bg-color', weatherColors.main);
     document.documentElement.style.setProperty('--text-color', weatherColors.support);
+    // unable to set svg properties through css variables, so work directly
+    copyrightSignElm.style.color = weatherColors.main;
+    copyrightSignElm.style.fill = weatherColors.support;
 
     bodyElm.style.backgroundImage = `url('${bgImage.image}')`;
     copyrightTextElm.innerHTML = `<p>Image by <a href='${bgImage.credit.link}'>${bgImage.credit.author}</a></p>`;
 
-    tempCScaleElm.addEventListener('click', cScaleClickHandler);
-    tempCScaleElm.addEventListener('keypress', cScaleClickHandler);
+    // set scale and switch handlers
+    if (userScale === 'celsius') toggleButtonsState(tempCScaleLabelElm, tempFScaleLabelElm);
+    else toggleButtonsState(tempFScaleLabelElm, tempCScaleLabelElm);
 
     function cScaleClickHandler(e) {
-      if ((e.type === 'keypress' && (e.code == 13 || e.code == 32)) ||
+      if ((e.type === 'keypress' && (e.keyCode === 13 || e.keyCode === 32)) ||
            e.type === 'click') {
-        tempFScaleElm.classList.toggle('vivid');
-        tempCScaleElm.classList.toggle('vivid');
         tempElm.innerText = data.temp_c;
-        tempCScaleElm.removeEventListener('click', cScaleClickHandler);
-        tempCScaleElm.removeEventListener('keypress', cScaleClickHandler);
-        tempFScaleElm.addEventListener('click', fScaleClickHandler);
-        tempFScaleElm.addEventListener('keypress', fScaleClickHandler);
+        if (readCookie('scale')) eraseCookie('scale');
+        createCookie('scale','celsius',300)
+        toggleButtonsState(tempCScaleLabelElm, tempFScaleLabelElm);
       }
-    };
+    }
 
     function fScaleClickHandler(e) {
-      if ((e.type === 'keypress' && (e.code == 13 || e.code == 32)) ||
+      if ((e.type === 'keypress' && (e.keyCode === 13 || e.keyCode === 32)) ||
            e.type === 'click') {
-        tempFScaleElm.classList.toggle('vivid');
-        tempCScaleElm.classList.toggle('vivid');
         tempElm.innerText = data.temp_f;
-        tempFScaleElm.removeEventListener('click', fScaleClickHandler);
-        tempFScaleElm.removeEventListener('keypress', fScaleClickHandler);
-        tempCScaleElm.addEventListener('click', cScaleClickHandler);
-        tempCScaleElm.addEventListener('keypress', cScaleClickHandler);
+        if (readCookie('scale')) eraseCookie('scale');
+        createCookie('scale','fahrenheit',300)
+        toggleButtonsState(tempFScaleLabelElm, tempCScaleLabelElm);
       }
-    };
+    }
+
+    function toggleButtonsState(btn_pressed, btn_released) {
+      if (btn_pressed.innerText  === 'F') {
+        var addHandler = cScaleClickHandler;
+        var removeHandler = fScaleClickHandler;
+        var inputCheckedElm = tempFScaleInputElm;
+        var inputUncheckedElm = tempCScaleInputElm;
+      } else if (btn_pressed.innerText  === 'C') {
+        var addHandler = fScaleClickHandler;
+        var removeHandler = cScaleClickHandler;
+        var inputCheckedElm = tempCScaleInputElm;
+        var inputUncheckedElm = tempFScaleInputElm;
+      }
+
+      btn_pressed.classList.add('vivid');
+      inputCheckedElm.setAttribute('aria-checked', 'true');
+      btn_pressed.removeEventListener('click', removeHandler);
+      btn_pressed.removeEventListener('keypress', removeHandler);
+
+      btn_released.classList.remove('vivid');
+      inputUncheckedElm.setAttribute('aria-checked', 'false');
+      btn_released.addEventListener('click', addHandler);
+      btn_released.addEventListener('keypress', addHandler);
+    }
+
 
   }
 
-
   function getWeatherForPosition(pos) {
-    const httpAddr = `https://api.wunderground.com/api/c29706cb930a70b9/conditions/q/${pos.coords.latitude},${pos.coords.longitude}.json`;//Kenmore,WA    
+    const httpAddr = `https://api.wunderground.com/api/c29706cb930a70b9/conditions/q/${pos.coords.latitude},${pos.coords.longitude}.json`;//Kenmore,WA
+    if (!fetch) alert('fetch() unavailable');
 
     fetch(httpAddr)
       .then(resp => {
@@ -395,6 +535,7 @@ body {
         throw new Error();
       })
       .then(data => {
+
         const obz = data.current_observation;
         const loc = obz.display_location;
 
@@ -410,6 +551,7 @@ body {
         const currDay = d.toLocaleDateString(undefined, dayOptions);
         const currDate = d.toLocaleDateString(undefined, dateOptions);
         const currTime = d.toLocaleTimeString(undefined, timeOptions);
+        const currMonth = d.getMonth() + 1;
         const sky = obz.weather;
         const temp = obz.temperature_string;
         const temp_c = obz.temp_c;
@@ -420,9 +562,11 @@ body {
         const conditions = obz.icon;
         return {
           place,
+          hemisphere: pos.coords.latitude > 0 ? 'north' : 'south',
           currDay,
           currDate,
           currTime,
+          currMonth,
           sky,
           temp,
           temp_f,
@@ -437,11 +581,16 @@ body {
       .catch (error => console.log(`Error while retrieving weather data - ${error.msg}`));
   }
 
-
-
-  if(navigator) {
-    navigator.geolocation.getCurrentPosition(getWeatherForPosition, errorHandler);
-  }
+  if(navigator.geolocation.getCurrentPosition) {
+    const location_timeout = setTimeout("geoLocFail()", 10010);
+    navigator.geolocation.getCurrentPosition(function(position) {
+      clearTimeout(location_timeout);
+      getWeatherForPosition(position);
+    }, function() {
+      clearTimeout(location_timeout);
+      geoLocFail();
+    }, { timeout:9999, maximumAge:0, enableHighAccuracy:true });
+  } else geoLocFail();
 
   const aboutBtn = document.querySelector('.about__button');
   aboutBtn.addEventListener('click', function() {
