@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="utf-8">
   <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
-  <link rel="stylesheet" href="awesomplete.css" />
   <title>Your local weather</title>
   <style>
 
@@ -55,29 +54,6 @@ root {
   right: 0;
   top: 0;
   z-index: 10;
-}
-
-.entry__modal {
-  display: flex;
-  width: 60vw;
-  max-width: 100%;
-  position: fixed;
-  z-index: 10;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.9);
-}
-
-.entry__modal-overlay {
-  background: rgba(100, 100, 100, 0.3);
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 9;
 }
 
 .about__button {
@@ -296,13 +272,6 @@ body {
   </svg>
   <p class="copyright__text"></p>
   </div>
-
-  <div class="entry__modal-overlay  closed"></div>
-  <div class="entry__modal  closed">
-    <input class="entry__input  entry__input--location  awesomplete" type="text" name="location" placeholder="Your city" />
-    <button class="entry__button--submit" type="submit">Get weather!</button>
-    <button class="entry__button--find-location">Use GPS</button>
-  </div>
 </body>
 
 <script>
@@ -311,25 +280,25 @@ body {
     if (days) {
       var date = new Date();
       date.setTime(date.getTime()+(days*24*60*60*1000));
-      var expires = "; expires="+date.toGMTString();
-    } else var expires = "";
-    document.cookie = name+"="+value+expires+"; path=/";
+      var expires = '; expires='+date.toGMTString();
+    } else var expires = '';
+    document.cookie = name+'='+value+expires+'; path=/';
   }
 
+  // function readCookie(name) {
+  //   const nameEQ = name + '=';
+  //   const re = new RegExp(`.*${nameEQ}(\\w+).*`,'g');
+  //   const result = re.exec(document.cookie);
+  //   return result ? result[1] : undefined;
+  // }
+
+//here is the function from https://stackoverflow.com/a/5882352
   function readCookie(name) {
-    const nameEQ = name + "=";
-    const re = new RegExp(`.*${nameEQ}(\\w+).*`,'g');
-    const result = re.exec(document.cookie);
-    return result ? result[1] : undefined;
+    return (name = new RegExp('(?:^|;\\s*)' + ('' + name).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&') + '=([^;]*)').exec(document.cookie)) && name[1];
   }
-
-// here the function from https://stackoverflow.com/a/5882352
-//  function readCookie(name) {
-//      return (name = new RegExp('(?:^|;\\s*)' + ('' + name).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&') + '=([^;]*)').exec(document.cookie)) && name[1];
-//  }
 
   function eraseCookie(name) {
-    createCookie(name,"",-1);
+    createCookie(name, '', -1);
   }
 
 
@@ -345,16 +314,16 @@ body {
     let msg = '';
     switch(error.code) {
        case error.PERMISSION_DENIED:
-           msg = "User denied the request for Geolocation.";
+           msg = 'User denied the request for Geolocation.';
            break;
        case error.POSITION_UNAVAILABLE:
-           msg = "Location information is unavailable.";
+           msg = 'Location information is unavailable.';
            break;
        case error.TIMEOUT:
-          msg = "The request to get user location timed out.";
+          msg = 'The request to get user location timed out.';
            break;
        case error.UNKNOWN_ERROR:
-          msg = "An unknown error occurred.";
+          msg = 'An unknown error occurred.';
            break;
         alert('Geolocation error: ', msg); // it's alert because we need to catch it on mobile platforms
     }
@@ -393,6 +362,8 @@ body {
                        link: 'https://flic.kr/p/cESNRS' },
       fog:         { author: 'Martin Fisch',
                        link: 'https://flic.kr/p/dkqP1t' },
+      hazy:        { author: 'pnwbot',
+                       link: 'https://flic.kr/p/pusoD1' },
       rain:        { author: 'Gabriele Diwald',
                        link: 'https://flic.kr/p/dfkuTL' },
       sunny:       { winter: { author: 'bfatphoto',
@@ -441,9 +412,12 @@ body {
         credit = credits.storm;
         break;
       case 'fog':
-      case 'hazy':
         backgroundImage = `fog/fog.jpg`;
         credit = credits.fog;
+        break;
+      case 'hazy':
+        backgroundImage = `hazy/hazy.jpg`;
+        credit = credits.hazy;
         break;
       case 'chancerain':
       case 'rain':
@@ -627,71 +601,19 @@ body {
 
   function requestLocation() {
     if(navigator.geolocation.getCurrentPosition) {
-      const location_timeout = setTimeout("geoLocFail()", 5010);
+      const location_timeout = setTimeout(geoLocFail, 5010);
       navigator.geolocation.getCurrentPosition(function(position) {
         clearTimeout(location_timeout);
         getWeatherForPosition(position.coords.latitude + ',' + position.coords.longitude);
       }, function() {
         clearTimeout(location_timeout);
         geoLocFail();
-      }, { timeout:4999, maximumAge:0, enableHighAccuracy:true });
+      }, { timeout: 4999, maximumAge: (60 * 10 * 1000), enableHighAccuracy: true });
     } else geoLocFail();
   }
 
   window.onload = function() {
-    const visitorPreferences = readCookie('geoLocPrefs');
-    if (visitorPreferences && visitorPreferences === 'useGeoLoc') {
       requestLocation();
-    } else {
-      const entryModalOverlayElm = document.querySelector('.entry__modal-overlay');
-      const entryModalElm = document.querySelector('.entry__modal');
-      const entryBtnUseGPS = document.querySelector('.entry__button--find-location');
-      const entryBtnSubmit = document.querySelector('.entry__button--submit');
-      const entryInputLocation = document.querySelector('.entry__input--location');
-
-      entryModalOverlayElm.classList.toggle('closed');
-      entryModalElm.classList.toggle('closed');
-
-      entryBtnUseGPS.addEventListener('click', function(e) {
-        e.preventDefault();
-        createCookie('geoLocPrefs', 'useGeoLoc');
-        entryModalOverlayElm.classList.toggle('closed');
-        entryModalElm.classList.toggle('closed');
-        requestLocation();
-      });
-
-// autocomplete works, but WU has a limit - 20 results per request. Don't want to deal with it and make multiple requests.
-      // entryInputLocation.addEventListener('input', function(e) {
-      //   if (this.value.length === 3) {
-      //     const httpAddrSearch = `https://cors-anywhere.herokuapp.com/http://autocomplete.wunderground.com/aq?query=${this.value}`;
-      //     fetch(httpAddrSearch)
-      //       .then(resp => {
-      //         if (resp.ok) {
-      //           return resp.json();
-      //         }
-      //         throw new Error();
-      //       })
-      //       .then(data => {
-      //         const list = data.RESULTS
-      //                       .filter(item => item.type === 'city')
-      //                       .map(item => {
-      //                         return { label: item.name,
-      //                                  value: (item.lat + ',' + item.lon) }
-      //                       });
-      //         new Awesomplete(this, { list });
-      //         this.focus();
-      //       })
-      //       .catch (error => console.log(`Error while city search processing - ${error.message}`));
-      //   }
-      // });
-
-      entryBtnSubmit.addEventListener('click', function(e) {
-        e.preventDefault();
-        entryModalOverlayElm.classList.toggle('closed');
-        entryModalElm.classList.toggle('closed');
-        getWeatherForPosition(entryInputLocation.value);
-      });
-    }
   }
 
   const aboutBtn = document.querySelector('.about__button');
@@ -708,5 +630,4 @@ body {
 
 
 </script>
-<script src="awesomplete.min.js" async></script>
 </html>
