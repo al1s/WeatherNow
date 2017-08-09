@@ -1,281 +1,3 @@
-<!doctype html>
-<html lang="en">
-<!-- TODO: store temp scale choice in a cookie -->
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta charset="utf-8">
-  <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
-  <title>Your local weather</title>
-  <style>
-
-root {
-  --text-color: #fff;
-  --bg-color: #fff;
-}
-
-.main {
-  border-radius: 5px;
-  color: var(--text-color);
-  background-color: var(--bg-color);
-  display: inline-block;
-  margin-left: 10vw;
-  margin-top: 15vh;
-  opacity: 0.8;
-  padding: 1rem;
-  position: relative;
-  text-transform: uppercase;
-  }
-
-.header {
-  visibility: hidden;
-  margin: 0;
-  padding: 0;
-  line-height: 0;
-  width: 0;
-}
-
-.about {
-  background-color: var(--bg-color);
-  border: 2px solid var(--text-color);
-  border-radius: 5px;
-  color: var(--text-color);
-  display: block;
-  padding: 1rem;
-  padding-top: 1.5rem;
-  position: relative;
-}
-
-.modal {
-  left: 0;
-  margin-top: 15%;
-  margin-left: 10%;
-  margin-right: 10%;
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 10;
-}
-
-.about__button {
-  border: 1px solid var(--text-color);
-  background-color: var(--bg-color);
-  border-radius: 50%;
-  color: var(--text-color);
-  cursor: pointer;
-  font-size: 0.6rem;
-  height: 10%;
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 10%;
-  padding-left: 6px;
-  text-align: center;
-  text-decoration: none;
-  text-transform: none;
-}
-
-.about__button--close-modal {
-  border: 1px solid var(--bg-color);
-  background-color: var(--text-color);
-  border-radius: 5px;
-  color: var(--bg-color);
-  cursor: pointer;
-  font-size: 0.7rem;
-  height: 20px;
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  width: 21px;
-  padding-left: -0.7rem;
-  text-align: center;
-  text-decoration: none;
-  text-transform: none;
-}
-
-.closed {
-  display: none;
-}
-
-.geo-details {
-  margin-bottom: 1.5rem;
-}
-
-.geo-details__date {
-  margin-bottom: 0.6rem;
-}
-
-.weather__temp {
-  display: inline;
-  position: relative;
-  padding-right: 1.3rem;
-
-}
-
-.weather__temp::after {
-  border: 2px solid var(--text-color);
-  border-radius: 50%;
-  content: '';
-  height: 0.5rem;
-  position: absolute;
-  right: 10px;
-  top: 2.3px;
-  width: 0.5rem;
-
-}
-
-.radio__list {
-  border: none;
-  display: inline;
-  margin: 0;
-  padding: 0;
-}
-
-.radio__item {
-  position: absolute;
-  left: -999px;
-  overflow: hidden;
-}
-
-
-.label__item {
-  color: inherit;
-  cursor: pointer;
-  background-color: inherit;
-  border: none;
-  font-size: inherit;
-  font-family: inherit;
-  margin: 0;
-  opacity: 0.4;
-  padding: 0;
-}
-
-.copyright {
-  background-color: var(--bg-color);
-  border-radius: 5px;
-  bottom: 10px;
-  position: fixed;
-  right: 10px;
-  text-decoration: none;
-}
-
-.copyright__text {
-  color: var(--text-color);
-  display: inline-block;
-  font-size: 1rem;
-  padding-right: 0.3rem;
-}
-
-.copyright__text a {
-  color: inherit;
-}
-
-.copyright__sign {
-  height: 25px;
-  vertical-align: middle;
-  width: 30px;
-  color: #fff;
-  /*color: var(--bg-color);
-  fill: var(--text-color);*/
-}
-
-.vivid {
-  opacity: inherit;
-}
-
-.vague {
-  opacity: 0.4;
-}
-
-.font--bigger {
-  font-size: 2rem;
-}
-
-/* css reset */
-div, p, span {
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  box-sizing: border-box;
-}
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
-body {
-  height: 100vh;
-  font-family: "Exo 2", "Lato", "PT Sans", -apple-system, BlinkMacSystemFont, "Roboto", "Ubuntu", "Droid Sans", "Helvetica Neue", "Arial", sans-serif;
-  font-size: 1rem;
-  /*background-image: url(sunny/sunny.jpg);*/
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-}
-
-* {
-//  border:1px solid red;
-}
-
-  </style>
-</head>
-<body>
-
-  <svg style="display:none;" version="1.0" xmlns="http://www.w3.org/2000/svg">
-  <symbol id="CC_by_sign"  viewbox="5.5 -3.5 64 64">
-      <circle fill="currentColor" cx="37.637" cy="28.806" r="28.276"/>
-      <path d="M37.443-3.5c8.988,0,16.57,3.085,22.742,9.257C66.393,11.967,69.5,19.548,69.5,28.5c0,8.991-3.049,16.476-9.145,22.456
-          C53.879,57.319,46.242,60.5,37.443,60.5c-8.649,0-16.153-3.144-22.514-9.43C8.644,44.784,5.5,37.262,5.5,28.5
-          c0-8.761,3.144-16.342,9.429-22.742C21.101-0.415,28.604-3.5,37.443-3.5z M37.557,2.272c-7.276,0-13.428,2.553-18.457,7.657
-          c-5.22,5.334-7.829,11.525-7.829,18.572c0,7.086,2.59,13.22,7.77,18.398c5.181,5.182,11.352,7.771,18.514,7.771
-          c7.123,0,13.334-2.607,18.629-7.828c5.029-4.838,7.543-10.952,7.543-18.343c0-7.276-2.553-13.465-7.656-18.571
-          C50.967,4.824,44.795,2.272,37.557,2.272z M46.129,20.557v13.085h-3.656v15.542h-9.944V33.643h-3.656V20.557
-          c0-0.572,0.2-1.057,0.599-1.457c0.401-0.399,0.887-0.6,1.457-0.6h13.144c0.533,0,1.01,0.2,1.428,0.6
-          C45.918,19.5,46.129,19.986,46.129,20.557z M33.042,12.329c0-3.008,1.485-4.514,4.458-4.514s4.457,1.504,4.457,4.514
-          c0,2.971-1.486,4.457-4.457,4.457S33.042,15.3,33.042,12.329z"/>
-  </symbol>
-  </svg>
-
-  <main class="main">
-    <h1 class='header'>Your local weather conditions.</h1>
-    <button class="about__button" aria-label="Information about this page">i</button>
-    <div class="geo-details">
-      <p class="geo-details__time"></p>
-      <p class="geo-details__date"></p>
-      <p class="geo-details__place"></p>
-    </div>
-    <div class="weather">
-      <span class="weather__sky"></span>
-      <div class="weather__temp  font--bigger"></div>
-      <fieldset class="radio__list">
-        <input class="radio__item  radio__item--fahrenheit" type="radio" id="scaleFahrenheit" name="scaleSwitch" tabindex="-1" aria-checked="true" aria-label="Set scale to Fahrenheit"/>
-        <label class="label__item  label__item--fahrenheit  vivid  font--bigger" for="scaleFahrenheit" tabindex="0" aria-labelledby="scaleFahrenheit">F</label>
-        <span class="vague  font--bigger">/</span>
-        <input class="radio__item radio__item--celsius" type="radio" id="scaleCelsius" name="scaleSwitch" tabindex="-1" aria-checked="false" aria-label="Set scale to Celsius"/>
-        <label class="label__item  label__item--celsius  font--bigger" for="scaleCelsius" tabindex="0" aria-labelledby="scaleCelsius">C</label>
-      </fieldset>
-    </div>
-  </main>
-  <div class="about  modal  closed">
-    <button class="about__button--close-modal" aria-label="Close">X</button>
-    <p>It's an approach to a "Local weather app" from <a href="https://www.freecodecamp.org/challenges/show-the-local-weather">FreeCodeCamp</a> cirriculum.</p>
-    <p>User story:</p>
-    <ul>
-      <li>I can see the weather in my current location.</li>
-      <li>I can see a different icon or background image (e.g. snowy mountain, hot desert) depending on the weather.</li>
-      <li>I can push a button to toggle between Fahrenheit and Celsius.</li>
-    </ul>
-  </div>
-  <div class="copyright">
-  <svg class="copyright__sign">
-    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#CC_by_sign"></use>
-  </svg>
-  <p class="copyright__text"></p>
-  </div>
-</body>
-
-<script>
-
   function createCookie(name,value,days) {
     if (days) {
       var date = new Date();
@@ -284,13 +6,6 @@ body {
     } else var expires = '';
     document.cookie = name+'='+value+expires+'; path=/';
   }
-
-  // function readCookie(name) {
-  //   const nameEQ = name + '=';
-  //   const re = new RegExp(`.*${nameEQ}(\\w+).*`,'g');
-  //   const result = re.exec(document.cookie);
-  //   return result ? result[1] : undefined;
-  // }
 
 //here is the function from https://stackoverflow.com/a/5882352
   function readCookie(name) {
@@ -308,25 +23,6 @@ body {
 
   function errorHandler(error) {
     console.log(`Got error  - ${error.message},\n${err.stack}`);
-  }
-
-  function geoLocFail(error) {
-    let msg = '';
-    switch(error.code) {
-       case error.PERMISSION_DENIED:
-           msg = 'User denied the request for Geolocation.';
-           break;
-       case error.POSITION_UNAVAILABLE:
-           msg = 'Location information is unavailable.';
-           break;
-       case error.TIMEOUT:
-          msg = 'The request to get user location timed out.';
-           break;
-       case error.UNKNOWN_ERROR:
-          msg = 'An unknown error occurred.';
-           break;
-        alert('Geolocation error: ', msg); // it's alert because we need to catch it on mobile platforms
-    }
   }
 
   function getWeatherColor(temp_c) {
@@ -350,7 +46,6 @@ body {
     // - conditions as returned by weather API
     // - current local season of the year;
     // - latitude (north or south hemisphere);
-    // - current local time; ???
     let backgroundImage;
     let credit = {};
     let credits = {
@@ -398,51 +93,51 @@ body {
       case 'chancesleet':
       case 'flurries':
       case 'sleet':
-        backgroundImage = `flurries/flurries.jpg`;
+        backgroundImage = `img/flurries.jpg`;
         credit = credits.flurries;
         break;
       case 'chancesnow':
       case 'snow':
-        backgroundImage = `snow/snow.jpg`;
+        backgroundImage = `img/snow.jpg`;
         credit = credits.snow;
         break;
       case 'chancetstorms':
       case 'tstorms':
-        backgroundImage = `storm/storm.jpg`;
+        backgroundImage = `img/storm.jpg`;
         credit = credits.storm;
         break;
       case 'fog':
-        backgroundImage = `fog/fog.jpg`;
+        backgroundImage = `img/fog.jpg`;
         credit = credits.fog;
         break;
       case 'hazy':
-        backgroundImage = `hazy/hazy.jpg`;
+        backgroundImage = `img/hazy.jpg`;
         credit = credits.hazy;
         break;
       case 'chancerain':
       case 'rain':
-        backgroundImage = `rain/rain.jpg`;
+        backgroundImage = `img/rain.jpg`;
         credit = credits.rain;
         break;
       case 'clear':
       case 'sunny':
-        backgroundImage = `sunny/${seasonYear}/sunny_${seasonYear}.jpg`;
+        backgroundImage = `img/sunny_${seasonYear}.jpg`;
         credit = credits.sunny[seasonYear];
         break;
       case 'cloudy':
         if (seasonYear === 'spring' || seasonYear === 'fall') seasonYear = 'summer';
-        backgroundImage = `cloudy/${seasonYear}/cloudy_${seasonYear}.jpg`;
+        backgroundImage = `img/cloudy_${seasonYear}.jpg`;
         credit = credits.cloudy[seasonYear];
         break;
       case 'mostlycloudy':
       case 'partlysunny':
         if (seasonYear === 'fall') seasonYear = 'spring';
-        backgroundImage = `partlysunny/${seasonYear}/partlysunny_${seasonYear}.jpg`;
+        backgroundImage = `img/partlysunny_${seasonYear}.jpg`;
         credit = credits.partlysunny[seasonYear];
         break;
       case 'mostlysunny':
       case 'partlycloudy':
-        backgroundImage = `mostlysunny/${seasonYear}/mostlysunny_${seasonYear}.jpg`;
+        backgroundImage = `img/mostlysunny_${seasonYear}.jpg`;
         credit = credits.mostlysunny[seasonYear];
         break;
     }
@@ -453,6 +148,9 @@ body {
 
     const bodyElm = document.querySelector('body');
     const mainElm = document.querySelector('.main');
+    const aboutElm = document.querySelector('.about');
+    const aboutBtnElm = document.querySelector('.about__button');
+    const aboutCloseBtnElm = document.querySelector('.about__button--close-modal');
     const dateElm = document.querySelector('.geo-details__date');
     const timeElm = document.querySelector('.geo-details__time');
     const placeElm = document.querySelector('.geo-details__place');
@@ -462,6 +160,7 @@ body {
     const tempCScaleLabelElm = document.querySelector('.label__item--celsius');
     const tempFScaleInputElm = document.querySelector('.radio__item--fahrenheit');
     const tempCScaleInputElm = document.querySelector('.radio__item--celsius');
+    const copyrightElm = document.querySelector('.copyright');
     const copyrightTextElm = document.querySelector('.copyright__text');
     const copyrightSignElm = document.querySelector('.copyright__sign');
     const userScale = readCookie('scale');
@@ -485,6 +184,20 @@ body {
     // unable to set svg properties through css variables, so work directly
     copyrightSignElm.style.color = weatherColors.main;
     copyrightSignElm.style.fill = weatherColors.support;
+    // unable to rule colors in old Safari with css variables, so work directly
+    mainElm.style.color = weatherColors.support;
+    mainElm.style.backgroundColor = weatherColors.main;
+    aboutElm.style.color = weatherColors.support;
+    aboutElm.style.backgroundColor = weatherColors.main;
+    aboutElm.style.borderColor = weatherColors.support;
+    aboutBtnElm.style.color = weatherColors.support;
+    aboutBtnElm.style.backgroundColor = weatherColors.main;
+    aboutBtnElm.style.borderColor = weatherColors.support;
+    aboutCloseBtnElm.style.color = weatherColors.main;
+    aboutCloseBtnElm.style.backgroundColor = weatherColors.support;
+    aboutCloseBtnElm.style.borderColor = weatherColors.main;
+    copyrightElm.style.backgroundColor = weatherColors.main;
+    copyrightTextElm.style.color = weatherColors.support; 
 
     bodyElm.style.backgroundImage = `url('${bgImage.image}')`;
     copyrightTextElm.innerHTML = `<p>Image by <a href='${bgImage.credit.link}'>${bgImage.credit.author}</a></p>`;
@@ -599,22 +312,60 @@ body {
       .catch (error => console.log(`Error while retrieving weather data - ${error.msg}`));
   }
 
-  function requestLocation() {
-    if(navigator.geolocation.getCurrentPosition) {
-      const location_timeout = setTimeout(geoLocFail, 5010);
-      navigator.geolocation.getCurrentPosition(function(position) {
-        clearTimeout(location_timeout);
-        getWeatherForPosition(position.coords.latitude + ',' + position.coords.longitude);
-      }, function() {
-        clearTimeout(location_timeout);
-        geoLocFail();
-      }, { timeout: 4999, maximumAge: (60 * 10 * 1000), enableHighAccuracy: true });
-    } else geoLocFail();
+  function getLocationByIP() {
+    fetch('https://freegeoip.net/json/')
+      .then(resp => {
+        if (resp.ok) return resp.json();
+        throw new Error();
+      })
+      .then(data => {
+        getWeatherForPosition(data.latitude + ',' + data.longitude);
+      })
   }
 
-  window.onload = function() {
-      requestLocation();
+  function geoLocFail(error) {
+    let msg = '';
+    switch(error) {
+      case 1: //error.PERMISSION_DENIED:
+           msg = "User denied the request for Geolocation.";
+           break;
+      case 2: //error.POSITION_UNAVAILABLE:
+           msg = "Location information is unavailable.";
+           break;
+      case 3: //error.TIMEOUT:
+          msg = "The request to get user location timed out.";
+          break;
+      default:
+          msg = error.message;
+          break;
+    }
+    console.warn(`Error: ${msg}`);
+    getLocationByIP(); //fallback to get alternative user location;
   }
+
+  function getLocation() {
+    if(navigator.geolocation) {
+      const location_timeout = setTimeout(function() {
+        let err = new Error({code: 3});
+        geoLocFail(err);
+      }, 0.2 * 10 * 1000); //0.2 is for 2 seconds timeout
+      navigator.geolocation.getCurrentPosition(function(position) {
+        clearTimeout(location_timeout);
+        //console.log('successfully get geoposition');
+        getWeatherForPosition(position.coords.latitude + ',' + position.coords.longitude);
+      }, function(err) {
+        clearTimeout(location_timeout);
+        //console.log('failed to get geoposition');
+        geoLocFail(err);
+      }, { timeout: 0.2 * 10 * 1000, maximumAge: 60 * 10 * 1000, enableHighAccuracy: false });
+    } else {
+      let err = new Error({code: -999, message: 'An unknown Geolocation error occurred'});
+      geoLocFail(err);
+    }
+  }
+
+// main
+  getLocation();
 
   const aboutBtn = document.querySelector('.about__button');
   aboutBtn.addEventListener('click', function() {
@@ -627,7 +378,3 @@ body {
     const aboutMsg = document.querySelector('.about');
     aboutMsg.classList.toggle('closed');
   });
-
-
-</script>
-</html>
