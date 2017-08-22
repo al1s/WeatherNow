@@ -16,15 +16,6 @@
     createCookie(name, '', -1);
   }
 
-
-  function capitalize(sentence) {
-    return sentence[0].toUpperCase() + sentence.substr(1);
-  }
-
-  function errorHandler(error) {
-    console.log(`Got error  - ${error.message},\n${err.stack}`);
-  }
-
   function getWeatherColor(temp_c) {
     let colors = {};
     if (30 <= temp_c) colors = { main: '#A50021', support: '#fff'};
@@ -50,43 +41,81 @@
     let credit = {};
     let credits = {
       flurries:    { author: 'Frida',
-                       link: 'https://flic.kr/p/k7zUGc' },
+                       URL: 'https://flic.kr/p/k7zUGc',
+                    license: 'CC BY-NC 2.0',
+                 licenseURL: 'https://creativecommons.org/licenses/by-nc/2.0' },
       snow:        { author: 'FHKE',
-                       link: 'https://flic.kr/p/7AVLQR' },
+                       URL: 'https://flic.kr/p/7AVLQR',
+                    license: 'CC BY-SA 2.0',
+                 licenseURL: 'https://creativecommons.org/licenses/by-sa/2.0' },
       storm:       { author: 'Kuster & Wildhaber Photography',
-                       link: 'https://flic.kr/p/cESNRS' },
+                       URL: 'https://flic.kr/p/cESNRS',
+                    license: 'CC BY-ND 2.0',
+                 licenseURL: 'https://creativecommons.org/licenses/by-nd/2.0' },
       fog:         { author: 'Martin Fisch',
-                       link: 'https://flic.kr/p/dkqP1t' },
+                       URL: 'https://flic.kr/p/dkqP1t',
+                    license: 'CC BY-SA 2.0',
+                 licenseURL: 'https://creativecommons.org/licenses/by-sa/2.0' },
       hazy:        { author: 'pnwbot',
-                       link: 'https://flic.kr/p/pusoD1' },
+                       URL: 'https://flic.kr/p/pusoD1',
+                    license: 'CC BY-NC-SA 2.0',
+                 licenseURL: 'https://creativecommons.org/licenses/by-nc-sa/2.0' },
       rain:        { author: 'Gabriele Diwald',
-                       link: 'https://flic.kr/p/dfkuTL' },
+                       URL: 'https://flic.kr/p/dfkuTL',
+                    license: 'CC BY 2.0',
+                 licenseURL: 'https://creativecommons.org/licenses/by/2.0'},
       sunny:       { winter: { author: 'bfatphoto',
-                                 link: 'https://flic.kr/p/RHwJiG' },
+                                 URL: 'https://flic.kr/p/RHwJiG',
+                              license: 'CC BY-NC-ND 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by-nc-nd/2.0' },
                     spring:  { author: 'Stanley Zimny',
-                                 link: 'https://flic.kr/p/oavqBk' },
+                                 URL: 'https://flic.kr/p/oavqBk',
+                              license: 'CC BY-NC 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by-nc/2.0' },
                     summer:  { author: 'Chris',
-                                 link: 'https://flic.kr/p/fgLTUU' },
+                                 URL: 'https://flic.kr/p/fgLTUU',
+                              license: 'CC BY-SA 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by-sa/2.0'},
                     fall:    { author: 'Jorge Franganillo',
-                                 link: 'https://flic.kr/p/i28UqP' }},
+                                 URL: 'https://flic.kr/p/i28UqP',
+                              license: 'CC BY 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by/2.0' }},
       cloudy:      { summer: { author: 'Kay Gaensler',
-                                 link: 'https://flic.kr/p/cScQxy' },
+                                 URL: 'https://flic.kr/p/cScQxy',
+                              license: 'CC BY-NC-SA 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by-nc-sa/2.0' },
                      winter: { author: 'Peter Toporowski',
-                                 link: 'https://flic.kr/p/RDW4Z1' }},
+                                 URL: 'https://flic.kr/p/RDW4Z1',
+                              license: 'CC BY 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by/2.0' }},
       partlysunny: { winter: { author: 'Gérald Laik',
-                                 link: 'https://flic.kr/p/RzuZS7' },
+                                 URL: 'https://flic.kr/p/RzuZS7',
+                              license: 'CC BY-NC-ND 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by-nc-nd/2.0' },
                     spring:  { author: 'Graham Haley',
-                                 link: 'https://flic.kr/p/UtjTDm' },
+                                 URL: 'https://flic.kr/p/UtjTDm',
+                              license: 'CC BY-SA 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by-sa/2.0' },
                     summer:  { author: 'Nicolas Raymond',
-                                 link: 'http://freestock.ca/skies_clouds_g61-coastal_clouds__hdr_p1879.html' }},
+                                  URL: 'http://freestock.ca/skies_clouds_g61-coastal_clouds__hdr_p1879.html',
+                              license: 'CC BY 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by/2.0'}},
      mostlysunny:  { winter: { author: 'Adam Tas',
-                                 link: 'https://flic.kr/p/R33zcf' },
+                                 URL: 'https://flic.kr/p/R33zcf',
+                              license: 'CC BY 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by/2.0' },
                     spring:  { author: 'Jim Choate',
-                                 link: 'https://flic.kr/p/SbmJj2' },
+                                 URL: 'https://flic.kr/p/SbmJj2',
+                              license: 'CC BY-NC-ND 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by-nc-nd/2.0' },
                     summer:  { author: 'Nicolas Raymond',
-                                 link: 'http://freestock.ca/canada_g92-beaver_brook_scenery__hdr_p804.html' },
+                                 URL: 'http://freestock.ca/canada_g92-beaver_brook_scenery__hdr_p804.html',
+                              license: 'CC BY 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by/2.0' },
                     fall:    { author: 'Belinda Church',
-                                 link: 'https://flic.kr/p/qb4cbs' }}
+                                 URL: 'https://flic.kr/p/qb4cbs',
+                              license: 'CC BY 2.0',
+                           licenseURL: 'https://creativecommons.org/licenses/by/2.0' }}
     };
     switch (conditions) {
       case 'chanceflurries':
@@ -162,7 +191,7 @@
     const tempCScaleInputElm = document.querySelector('.radio__item--celsius');
     const copyrightElm = document.querySelector('.copyright');
     const copyrightTextElm = document.querySelector('.copyright__text');
-    const copyrightSignElm = document.querySelector('.copyright__sign');
+    //const copyrightSignElm = document.querySelector('.copyright__sign');
     const userScale = readCookie('scale');
 
 
@@ -173,17 +202,22 @@
 
     // set visual appearance of the page
     let seasonYear;
-    if (data.currMonth < 3 || data.currMonth === 12) seasonYear = data.hemisphere === 'north' ? 'winter' : 'summer';
-    else if (3 <= data.currMonth && data.currMonth < 6) seasonYear = data.hemisphere === 'north' ? 'spring' : 'fall';
-    else if (6 <= data.currMonth && data.currMonth < 9) seasonYear = data.hemisphere === 'north' ? 'summer' : 'winter';
-    else if (9 <= data.currMonth && data.currMonth < 12) seasonYear = data.hemisphere === 'north' ? 'fall' : 'spring';
+    if (data.currMonth < 3 || data.currMonth === 12) {
+      seasonYear = data.hemisphere === 'north' ? 'winter' : 'summer';
+    } else if (3 <= data.currMonth && data.currMonth < 6) {
+      seasonYear = data.hemisphere === 'north' ? 'spring' : 'fall';
+    } else if (6 <= data.currMonth && data.currMonth < 9) {
+      seasonYear = data.hemisphere === 'north' ? 'summer' : 'winter';
+    } else if (9 <= data.currMonth && data.currMonth < 12) {
+      seasonYear = data.hemisphere === 'north' ? 'fall' : 'spring';
+    }
     const bgImage = getWeatherImage(data.conditions, seasonYear);
     const weatherColors = getWeatherColor(data.temp_c); // all inner visual appearance decisions are based on celsius scale;
     document.documentElement.style.setProperty('--bg-color', weatherColors.main);
     document.documentElement.style.setProperty('--text-color', weatherColors.support);
     // unable to set svg properties through css variables, so work directly
-    copyrightSignElm.style.color = weatherColors.main;
-    copyrightSignElm.style.fill = weatherColors.support;
+    //copyrightSignElm.style.color = weatherColors.main;
+    //copyrightSignElm.style.fill = weatherColors.support;
     // unable to rule colors in old Safari with css variables, so work directly
     mainElm.style.color = weatherColors.support;
     mainElm.style.backgroundColor = weatherColors.main;
@@ -197,10 +231,10 @@
     aboutCloseBtnElm.style.backgroundColor = weatherColors.support;
     aboutCloseBtnElm.style.borderColor = weatherColors.main;
     copyrightElm.style.backgroundColor = weatherColors.main;
-    copyrightTextElm.style.color = weatherColors.support; 
+    copyrightTextElm.style.color = weatherColors.support;
 
     bodyElm.style.backgroundImage = `url('${bgImage.image}')`;
-    copyrightTextElm.innerHTML = `<p>Image by <a href='${bgImage.credit.link}'>${bgImage.credit.author}</a></p>`;
+    copyrightTextElm.innerHTML = `<p>Photo by <a href='${bgImage.credit.URL}'>${bgImage.credit.author}</a>, <a href='${bgImage.credit.licenseURL}'>${bgImage.credit.license}</a>.</p>`;
 
     // set scale and switch handlers
     if (userScale === 'celsius') toggleButtonsState(tempCScaleLabelElm, tempFScaleLabelElm);
